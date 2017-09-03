@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gabble</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <div class='container'>
+      <div class="errors">
+        {{#errors}}
+        <p>{{.}}</p>
+        {{/errors}}
+      </div>
+      <div>
+        {{#user}}
+          <ul class='navigation'>
+            <li class='navbar'><a href='/index'>Gabble</a></li>
+            <li class='navbar'><a href='/newgab'>Create a new gab</a><li>
+            <li class='navbar'><a href='/profile'>Logged in as {{user}}</a></li>
+            <li class='navbar'><a href='/logout'>Log out</a></li>
+          </ul>
+        {{/user}}
+      </div><br><br>
+      <div id='usermessages'>
+        <!-- <h1>Where user message will be placed</h1> -->
+        {{user}}
+        {{#usermessages}}
+          <p>{{message}}</p>
+          <p>Likes: {{counter}}</p>
+          <p>Message:created {{createdat}}</p>
+        {{/usermessages}}
+        <form action="/user/like" method="post">
+          <input type='submit' value='Like' name='likeBtn' id='likeBtn'>
+        </form>
+        <form action="/msg/delete/{{id}}" method="post">
+          <input type='submit' value='Delete' name='deleteBtn' id='deleteBtn'>
+        </form>
+        <p>date message was created</p>
+        <p>number of likes</p>8
+      </div>
+    </div>
+  </body>
+</html>

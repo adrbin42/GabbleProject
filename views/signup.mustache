@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <h1>Sign Up For Gabble</h1>
+    <div class="container">
+      <div class="errors">
+        {{#errors}}
+        <p>{{.}}</p>
+        {{/errors}}
+      </div>
+      <!-- <div>
+        <ul class='navigation'>
+          <li class='navbar'><a href='/index'>Gabble</a></li>
+          <li class='navbar'><a href='/newgab'>Create a new gab</a><li>
+          <li class='navbar'><a href='/login'>Logged in </a></li>
+          <li class='navbar'><a href='/logout'>Log out</a></li>
+      </ul>
+      </div><br><br> -->
+      <div class='signup'>
+        <form action="/signup" method="post">
+          <input type="text" name="firstname" value="" placeholder="Enter firstname">
+          <input type="text" name="lastname" value="" placeholder="Enter lastname">
+          <input type="text" name="username" value="" placeholder="Enter Username">
+          <input type="password" name="password" value="" placeholder="Enter Password">
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
