@@ -4,13 +4,13 @@ const sequelize = require("sequelize");
 
 //Get Messages of other users who has notlogged in yet
 const getUserMessages = function(req, res, next) {
-   models.tbl_messages.findAll({
+   models.message.findAll({
         order: [['createdAt','DESC']],
          where: {
            user_id: req.session.userid
          },
          include: [{
-           model: models.tbl_user,
+           model: models.user,
            as: "gabs"
          }],
 
@@ -23,15 +23,15 @@ const getUserMessages = function(req, res, next) {
      }
    });
  }
-//Get Messages of users logged in the system
+//Get all user messages
 const getAllMessages = function(req, res, next) {
-   models.tbl_messages.findAll({
+   models.message.findAll({
         order: [['createdAt','DESC']],
          where: {
            user_id: {$not:req.session.userid}
          },
          include: [{
-           model: models.tbl_user,
+           model: models.user,
            as: "gabs"
          }]
    }).then(function(userMsg) {
@@ -39,16 +39,17 @@ const getAllMessages = function(req, res, next) {
        req.AllMsg = userMsg;
        next();
      } else {
-       res.status(404).send("Record not found - All Messages");
+       res.status(404).send("Records not found");
      }
    });
  }
 
-//Display Gabble
-routes.get("/home", getUserMessages, getAllMessages, function(req, res){
+//Display Gabble home page
+routes.get("/index", getUserMessages, getAllMessages, function(req, res){
 
-  res.render("home",{allMsg:req.AllMsg,
+  res.render("index",{allMsg:req.AllMsg,
                      userMsg:req.userMsg,
+                     firstname:req.session.firstname,
                      sessionExist:req.session.username,
                      userFullName: req.session.name});
 });
@@ -74,7 +75,7 @@ routes.post("/home", getUserMessages, getAllMessages, function(req, res){
     });
   }
   else if(req.body.action =="delUserMsg"){
-    models.tbl_messages.findById(req.body.id_hidden).then(function(msg){
+    models.message.findById(req.body.id_hidden).then(function(msg){
       msg.destroy().then(function(){
         res.redirect("/home");
       });
