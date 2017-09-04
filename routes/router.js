@@ -3,7 +3,7 @@ const router = express.Router();
 const models = require('../models');
 const session = require('express-session');
 
-// models.messages.findOne().then(function(message){
+// models.message.findOne().then(function(message){
 //   console.log(message);
 // })
 
@@ -17,18 +17,18 @@ router.use(session({
 //Render app home page
 router.get('/', function(req,res){
   if(req.session.username){
-    models.messages.findAll({where:{userid:req.session.id}}).then(function(messages){
+    models.message.findAll({where:{userid:req.session.id}}).then(function(message){
       include:[
         {
-          model:models.users,
-          as:'usermessages'
+          model:models.user,
+          as:'usermessage'
         }
       ]
       res.render("index",
       {
-        user:usermessages.username,
-        messages:models.messages.message,
-        msgscreated:models.messages.createdAt
+        user:usermessage.username,
+        messages:models.message.message,
+        msgscreated:models.message.createdAt
       });
     })
 
@@ -42,7 +42,7 @@ router.get('/login', function(req,res){
 });
 
 router.post('/login', function(req,res){
-  models.users.findOne({where:{username:req.body.username}}).then(function(user) {
+  models.user.findOne({where:{username:req.body.username}}).then(function(user) {
 
     let errorMsgs = [];
 
@@ -51,18 +51,18 @@ router.post('/login', function(req,res){
     req.checkBody("username", "Invalid password and username combination.").equals(user.username);
     req.checkBody("password", "Invalid password and username combination.").equals(user.password);
 
-    let errors = req.validationErrors();
+    let errors = req.getValidationResult();
       if (errors) {
         errors.forEach(function(error) {
           errorMsgs.push(error.msg);
     });
         res.render("login", {errors: errorMsgs});
       } else {
-        req.session.username = models.users.username;
-        req.session.id = models.users.id;
-        req.session.firstname = models.users.firstname;
-        req.session.lastname = models.users.lastname;
-        req.session.createdat = models.users.createdAt;
+        req.session.username = models.user.username;
+        req.session.id = models.user.id;
+        req.session.firstname = models.user.firstname;
+        req.session.lastname = models.user.lastname;
+        req.session.createdat = models.user.createdAt;
         res.redirect("/");
         }
       })//end promise for finding a user
@@ -81,7 +81,7 @@ router.get('/signup',function(req,res){
 });
 
 router.post('/signup',function(req,res,next){
-  const user = models.users.build({
+  const user = models.user.build({
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     username: req.body.username,
@@ -101,7 +101,7 @@ router.get('/newgab', function(req,res){
 
 router.post('/newgab', function(req,res){
   if(req.session.username){
-    const newgab = models.messages.build({
+    const newgab = models.message.build({
       message:req.body.msgBox,
       userid:req.session.id
     });
@@ -127,9 +127,9 @@ router.post('/likes', function(req,res){
 
 // router.post('/msg/delete/:id', function(req,res){
 
-//   models.messages.destroy({where:{id:req.params.msgid}).then(function(message){
-//   res.render('index',{messages});
-//   console.log('show all messages on home page');
+//   models.message.destroy({where:{id:req.params.msgid}).then(function(message){
+//   res.render('index',{message});
+//   console.log('show all message on home page');
 //   });
 //
 // });
