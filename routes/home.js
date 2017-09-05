@@ -2,12 +2,12 @@ const routes = require('express').Router();
 const models = require('../models');
 const sequelize = require("sequelize");
 
-//Get Messages of other users who has notlogged in yet
+//Get messages of users that have logged in
 const getUserMessages = function(req, res, next) {
-   models.tbl_messages.findAll({
+   models.message.findAll({
         order: [['createdAt','DESC']],
          where: {
-           user_id: req.session.userid
+           userid: req.session.userid
          },
          include: [{
            model: models.user,
@@ -23,13 +23,10 @@ const getUserMessages = function(req, res, next) {
      }
    });
  }
-//Get Messages of users logged in the system
+//Get Messages of all users
 const getAllMessages = function(req, res, next) {
-   models.tbl_messages.findAll({
+   models.message.findAll({
         order: [['createdAt','DESC']],
-         where: {
-           user_id: {$not:req.session.userid}
-         },
          include: [{
            model: models.user,
            as: "gabs"
@@ -39,7 +36,7 @@ const getAllMessages = function(req, res, next) {
        req.AllMsg = userMsg;
        next();
      } else {
-       res.status(404).send("Record not found - All Messages");
+       res.status(404).send("No messages found");
      }
    });
  }
@@ -49,8 +46,9 @@ routes.get("/index", getUserMessages, getAllMessages, function(req, res){
 
   res.render("index",{allMsg:req.AllMsg,
                      userMsg:req.userMsg,
-                     sessionExist:req.session.username,
-                     userFullName: req.session.name});
+                     username:req.session.username,
+                     firstname:req.session.firstname,
+                     lastname: req.session.lastname});
 });
 //Delete and like functionality of user Messages
 routes.post("/index", getUserMessages, getAllMessages, function(req, res){
@@ -60,23 +58,23 @@ routes.post("/index", getUserMessages, getAllMessages, function(req, res){
 
   if(req.body.action =="likeOthersMsg" || req.body.action =="likeUserMsg" )
   {
-      models.likes.findOrCreate({
+    models.like.findOrCreate({
       where: {
         messsage_id: req.body.id_hidden,
-        user_id: req.session.userid
+        userid: req.session.userid
       }
     }).catch(sequelize.ValidationError, function(err) {
       console.log("Not Valid! ", err);
     }).catch(sequelize.UniqueConstraintError, function(err) {
       console.log("Not Unique! ", err);
     }).spread(function(like, created){
-        res.redirect("/likes?msgId=" + req.body.id_hidden);
+        res.redirect("/like?msgid=" + req.body.id_hidden);
     });
   }
   else if(req.body.action =="delUserMsg"){
-    models.tbl_messages.findById(req.body.id_hidden).then(function(msg){
+    models.message.findById(req.body.id_hidden).then(function(msg){
       msg.destroy().then(function(){
-        res.redirect("/home");
+        res.redirect("/index");
       });
     });
   }

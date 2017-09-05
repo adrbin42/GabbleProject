@@ -1,32 +1,29 @@
 const routes = require('express').Router();
 const models = require('../models');
-//User sees this page first
+
+//Show login page
 routes.get("/", function(req, res){
-  res.render("login", {sessionExist:req.session.userid});
+  res.render("login");
 });
 
-routes.get("/login", function(req, res){
-  res.render("login", {sessionExist:req.session.id});
-});
-
-//Login to the system
-//checks invalid login
-
+//Login to Gabble
 routes.post('/login',function(req, res){
-  let errors = "";
-  let messages = [];
+  let errors = "",
+      errorMsgs = [];
 
-  req.checkBody("username", "Please enter username").notEmpty();
-  req.checkBody("password", "Please enter password").notEmpty();
+  req.check("username", "Please Enter a valid username.").notEmpty();
+  req.check("username", "Password must be atleast 5 characters.").isLength({min: 5, max: 20});
+  req.check("password", "Please Enter a Password.").notEmpty();
+  req.check("username", "Invalid password and username combination.").equals(req.body.username);
+  req.check("password", "Invalid password and username combination.").equals(req.body.password);
 
   errors = req.validationErrors();
   if(errors) {
     errors.forEach(function(error){
-    messages.push(error.msg);
+    errorMsgs.push(error.msg);
   });
-  res.render("login", {messages: messages,
-                       sessionExist:req.session.id,
-                       userFullName: req.session.name});
+
+  res.render("login", {errors: errorMsgs});
   }
   else {
     models.user.findOne({
@@ -35,15 +32,15 @@ routes.post('/login',function(req, res){
         password: req.body.password
       }})
     .then(function(user){
-       if(!user){
-         res.render("login", {messages: "Enter a valid username and password"});
-       }
-       else {
+          console.log(user);
+          console.log(user.username);
           req.session.username = user.username;
           req.session.userid = user.id;
-          req.session.name = user.name;
-          res.redirect("/home");
-       }
+          req.session.firstname = user.firstname;
+          req.session.lastname = user.lastname;
+          console.log("All is fine!");
+          res.redirect("/index");
+
      });
    }
 });

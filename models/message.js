@@ -11,12 +11,10 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
-  });
+  }, {});
+    message.associate = function(models) {
+    message.belongsTo(models.user, {as: 'gabs', foreignKey: 'userid'});
+    message.hasMany(models.like, {as: 'gabsliked', foreignKey: 'msgid'});
+  }
   return message;
 };

@@ -1,13 +1,14 @@
 const routes = require('express').Router();
 const models = require('../models');
+
 //Get the message based on the message clicked
 const getMessage = function(req, res, next) {
-   models.tbl_messages.findOne({
+   models.message.findOne({
          where: {
-           id: req.query.msgId
+           id: req.query.msgid
          },
          include: [{
-           model: models.tbl_user,
+           model: models.user,
            as: "gabs"
          }]
    }).then(function(userMsg) {
@@ -21,15 +22,15 @@ const getMessage = function(req, res, next) {
  }
 //Display all the users liked the message so far
   const getLikedUsersList = function(req,res, next){
-     models.tbl_likes.findAll({
+     models.like.findAll({
        where:{
-          messsage_id:req.query.msgId
+          messsage_id:req.query.msgid
          },
        include: [{
-          model: models.tbl_user,
+          model: models.user,
           as: "likeusers",
        include: [{
-            model: models.tbl_messages,
+            model: models.message,
             as: "users"
           }]
         }]
@@ -44,12 +45,12 @@ const getMessage = function(req, res, next) {
   }
 //Get number of persons liked the message , the count
   const getNumberOfLikes = function(req, res, next){
-    models.tbl_messages.findAndCountAll({
+    models.message.findAndCountAll({
       where:{
-        id : req.query.msgId
+        id : req.query.msgid
       },
       include: [{
-         model: models.tbl_likes,
+         model: models.like,
          as: "gabsliked",
        }]
      }).then(function(users){
@@ -73,8 +74,7 @@ routes.get('/likes', getMessage, getLikedUsersList, getNumberOfLikes, function(r
                       res.render("likes", {allMsg:req.Msg,
                        likedUsersList: req.likedUsersList,
                        getNumberOfLikes: req.countUsersLiked,
-                       sessionExist:req.session.username,
-                       userFullName: req.session.name});
+                       firstname: req.session.firstname});
 });
 
 
