@@ -2,8 +2,7 @@ const routes = require('express').Router();
 const models = require('../models');
 
  routes.get("/newgab", function(req, res){
-  res.render("newgab", {sessionExist:req.session.username,
-                        userFullName: req.session.name});
+  res.render("newgab", {firstname: req.session.firstname});
 });
 // create a new gab
 routes.post("/newgab", function(req, res){
@@ -11,18 +10,17 @@ routes.post("/newgab", function(req, res){
   req.checkBody("newgab", "Enter gab and submit").notEmpty();
   req.getValidationResult().then(function(errors) {
     if(errors.isEmpty()){
-        models.tbl_messages.create({
+        models.message.create({
           messages: req.body.newgab,
-          user_id: req.session.userid
+          userid: req.session.userid
         }).then(function(gab) {
-        res.redirect("/home");
+        res.redirect("/index");
         });
       }
       else {
           console.log("errors");
           res.render("newgab",  {messages: errors.array(),
-                                userFullName: req.session.name,
-                                sessionExist:req.session.username});
+                                firstname: req.session.firstname});
       }
   });
 });

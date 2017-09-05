@@ -3,7 +3,7 @@ const models = require('../models');
 const sequelize = require("sequelize");
 
 routes.get("/signup", function(req, res){
-  res.render("signup", {sessionExist:req.session.username});
+  res.render("signup");
 });
 //Get the display name, username, password from the user
 //New user registration with validations
@@ -23,11 +23,10 @@ routes.post("/signup", function(req, res){
     errors.forEach(function(error){
     messages.push(error.msg);
   });
-  res.render("signup", {messages: messages,
-                        sessionExist:req.session.username});
+  res.render("signup", {messages: messages});
   }
   else {
-    models.tbl_user.findOrCreate({
+    models.user.findOrCreate({
       where: {
         username: req.body.username
       },
@@ -41,10 +40,10 @@ routes.post("/signup", function(req, res){
       console.log("Not Unique! ", err);
     }).spread(function(user, created){
       if(!created) {
-        res.render("signup", {messages: "Username already exists", sessionExist:req.session.username});
+        res.render("signup", {messages: "Username already exists"});
       }
       else{
-        res.render("login", {sessionExist:req.session.username});
+        res.render("login");
       }
     });
   }

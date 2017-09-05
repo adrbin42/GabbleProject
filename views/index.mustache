@@ -2,73 +2,60 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gabble</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <title>Home</title>
+    <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
-      <div class="wrapper">
-        <div class="header">
-          {{#sessionExist}}
-            <span class="welcome">Welcome {{firstname}}</span>
-          {{/sessionExist}}
-          <span>
-            <nav>
-              {{^sessionExist}}
-                <a href="/login">Login</a>
-                <a href="/signup">Sign Up</a>
-              {{/sessionExist}}
-              {{#sessionExist}}
-                <a href="/newgab">New Gab</a>
-                <a href="/logout">Log out</a>
-              {{/sessionExist}}
-            </nav>
-          </span>
-          <span class="title">Gabble</span>
-        </div>
-      {{^sessionExist}}
-        <div class="fields"><ul><li>Login to view gabs</li></ul></div>
-      {{/sessionExist}}
-      {{#sessionExist}}
-        <div class="fields">
-          <ul>
-            {{#userMsg}}
-            <li>{{#gabs}}<b>{{name}}</b>{{/gabs}} : <div class="display_msg">{{messages}}</div></li>
-            <li>{{createdAt}}</li>
-            <li>
-              <form method="post" action="/home">
-                <input type="hidden" name="id_hidden" value="{{id}}">
-                <input type="hidden" name="action" value="delUserMsg">
-                <button type="submit" name= "btn_Del" value="Delete">Delete</button>
-              </form>
-              <form method="post" action="/home">
-                 <input type="hidden" name="id_hidden" value="{{id}}">
-                 <input type="hidden" name="action" value="likeUserMsg">
-                 <button type="submit" name= "btn_Like" value="Like">Like</button>
-            </form>
-          </li>
-            {{/userMsg}}
-
-            {{^userMsg}}
-              <li>No messages added recently by the user</li>
-            {{/userMsg}}
-          </ul>
-        </div>
-        <hr>
-        <div class="fields">
-          <ul>
-          {{#allMsg}}
-            <li>{{#gabs}}<b>{{name}}</b>{{/gabs}} : <div class="display_msg">{{messages}}</div></li>
-            <li>{{createdAt}}</li>
+    <div class="wrapper">
+          <span class="welcome">Welcome {{firstname}}</span>
+        <span>
+          <nav>
+              <a href="/newgab">New Gab</a>
+              <a href="/logout">Log out</a>
+          </nav>
+        </span>
+        <span class="title">Gabble</span>
+      </div>
+      <div class="fields">
+        <ul>
+          {{#userMsg}}
+          <li>{{#gabs}}<b>{{name}}</b>{{/gabs}} : <div class="display_msg">{{messages}}</div></li>
+          <li>{{createdAt}}</li>
+          <li>
             <form method="post" action="/home">
               <input type="hidden" name="id_hidden" value="{{id}}">
-              <input type="hidden" name="action" value="likeOthersMsg">
-              <li><button type="submit" name= "btn_Like">Like</button></li>
+              <input type="hidden" name="action" value="delUserMsg">
+              <button type="submit" name= "btn_Del" value="Delete">Delete</button>
             </form>
-            {{/allMsg}}
-          </ul>
-        </div>
-      {{/sessionExist}}
+            <form method="post" action="/home">
+               <input type="hidden" name="id_hidden" value="{{id}}">
+               <input type="hidden" name="action" value="likeUserMsg">
+               <button type="submit" name= "btn_Like" value="Like">Like</button>
+          </form>
+        </li>
+          {{/userMsg}}
+          {{^userMsg}}
+            <li>No messages added recently by the user</li>
+          {{/userMsg}}
+        </ul>
+      </div>
+      <hr>
+
+      <div class="fields">
+        <ul>
+        {{#allMsg}}
+          <li>{{#gabs}}<b>{{name}}</b>{{/gabs}} : <div class="display_msg">{{messages}}</div></li>
+          <li>{{createdAt}}</li>
+          <form method="post" action="/home">
+            <input type="hidden" name="id_hidden" value="{{id}}">
+            <input type="hidden" name="action" value="likeOthersMsg">
+            <li><button type="submit" name= "btn_Like">Like</button></li>
+          </form>
+          {{/allMsg}}
+        </ul>
+      </div>
     </div>
+
   </body>
 </html>

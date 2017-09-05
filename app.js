@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const mustacheExpress = require('mustache-express');
 const bodyParser = require("body-parser");
-const expressValidator = require("express-validator");
+const expressValidator = require('express-validator');
 const morgan = require("morgan");
 const signupRoutes = require("./routes/signup");
 const loginRoutes = require("./routes/login");
@@ -17,13 +17,11 @@ const app = express();
 app.engine('mustache', mustacheExpress());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'mustache');
-// app.set('layout','layout');
-
-app.use('public', express.static('public'));
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(express.static(__dirname + '/public'));
+app.use('/static', express.static('static'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
-app.use(morgan('dev'));
+app.use(morgan('dev'))
 
 app.use(session({
   secret: 'winnerswin',

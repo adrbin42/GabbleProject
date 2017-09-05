@@ -5,9 +5,9 @@ module.exports = function(sequelize, DataTypes) {
     userid: DataTypes.INTEGER
   }, {});
 
-    likes.associate = function(models) {
-    likes.belongsTo(models.tbl_user, { as: "likeusers", foreignKey: 'user_id'});
-    likes.belongsTo(models.tbl_messages, {as: "likegabs", foreignKey: 'messsage_id'});
+    like.associate = function(models) {
+    like.belongsTo(models.user, { as: "likeusers", foreignKey: 'userid'});
+    like.belongsTo(models.message, {as: "likegabs", foreignKey: 'msgid'});
     }
   return like;
 };
