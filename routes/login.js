@@ -29,7 +29,7 @@ routes.post('/login',function(req, res){
                        userFullName: req.session.name});
   }
   else {
-    models.tbl_user.findOne({
+    models.user.findOne({
       where: {
         username: req.body.username,
         password: req.body.password

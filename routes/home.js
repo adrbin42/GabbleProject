@@ -10,7 +10,7 @@ const getUserMessages = function(req, res, next) {
            user_id: req.session.userid
          },
          include: [{
-           model: models.tbl_user,
+           model: models.user,
            as: "gabs"
          }],
 
@@ -31,7 +31,7 @@ const getAllMessages = function(req, res, next) {
            user_id: {$not:req.session.userid}
          },
          include: [{
-           model: models.tbl_user,
+           model: models.user,
            as: "gabs"
          }]
    }).then(function(userMsg) {
@@ -45,22 +45,22 @@ const getAllMessages = function(req, res, next) {
  }
 
 //Display Gabble
-routes.get("/home", getUserMessages, getAllMessages, function(req, res){
+routes.get("/index", getUserMessages, getAllMessages, function(req, res){
 
-  res.render("home",{allMsg:req.AllMsg,
+  res.render("index",{allMsg:req.AllMsg,
                      userMsg:req.userMsg,
                      sessionExist:req.session.username,
                      userFullName: req.session.name});
 });
 //Delete and like functionality of user Messages
-routes.post("/home", getUserMessages, getAllMessages, function(req, res){
+routes.post("/index", getUserMessages, getAllMessages, function(req, res){
 
   let allMsg = req.AllMsg;
   let userMsg = req.userMsg;
 
   if(req.body.action =="likeOthersMsg" || req.body.action =="likeUserMsg" )
   {
-      models.tbl_likes.findOrCreate({
+      models.likes.findOrCreate({
       where: {
         messsage_id: req.body.id_hidden,
         user_id: req.session.userid
