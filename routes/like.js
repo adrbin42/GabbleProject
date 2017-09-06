@@ -24,7 +24,7 @@ const getMessage = function(req, res, next) {
   const getLikedUsersList = function(req,res, next){
      models.like.findAll({
        where:{
-          messsage_id:req.query.msgid
+          msgid:req.query.msgid
          },
        include: [{
           model: models.user,

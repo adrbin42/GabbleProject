@@ -19,7 +19,7 @@ const getUserMessages = function(req, res, next) {
        req.userMsg = userMsg;
        next();
      } else {
-       res.status(404).send("Record not found - User Message");
+       res.status(404).send("No messages for this user.");
      }
    });
  }
@@ -50,6 +50,7 @@ routes.get("/index", getUserMessages, getAllMessages, function(req, res){
                      firstname:req.session.firstname,
                      lastname: req.session.lastname});
 });
+
 //Delete and like functionality of user Messages
 routes.post("/index", getUserMessages, getAllMessages, function(req, res){
 
@@ -60,15 +61,18 @@ routes.post("/index", getUserMessages, getAllMessages, function(req, res){
   {
     models.like.findOrCreate({
       where: {
-        messsage_id: req.body.id_hidden,
+        msgid: req.body.id_hidden,
         userid: req.session.userid
       }
     }).catch(sequelize.ValidationError, function(err) {
       console.log("Not Valid! ", err);
     }).catch(sequelize.UniqueConstraintError, function(err) {
       console.log("Not Unique! ", err);
-    }).spread(function(like, created){
-        res.redirect("/like?msgid=" + req.body.id_hidden);
+    }).then(function(like, created){
+        res.redirect("/likes?msgid=" + req.body.id_hidden);
+    })
+      .catch(function(err) {
+        res.redirect("/index");
     });
   }
   else if(req.body.action =="delUserMsg"){

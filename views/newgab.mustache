@@ -2,41 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="main.css">
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
     <title>New Gab</title>
   </head>
   <body>
     <div class="wrapper">
       <div class="header">
-        {{#sessionExist}}
           <span class="welcome">Welcome {{firstname}}</span>
-        {{/sessionExist}}
         <span>
           <nav>
-            {{^sessionExist}}
-              <a href="/login">Login</a>
-              <a href="/signup">Sign Up</a>
-            {{/sessionExist}}
-            {{#sessionExist}}
-              <a href="/home">Gabble</a>
+              <a href="/index">Gabble</a>
               <a href="/logout">Log out</a>
-            {{/sessionExist}}
+
           </nav>
         </span>
         <span class="title">New Gab</span>
       </div>
-      {{#sessionExist}}
+
       <div class="fields">
         <ul>
-          <li class="msg"><p>{{#messages}}{{msg}}{{/messages}}</p>
+          <li class="msg"><p>{{#message}}<b>Will this be seen</b>{{/message}}</p>
           <form action="/newgab" method="post">
+          <li><input type="text" name="gabtitle" placeholder="Gab title"></li>
           <li><textarea  name="newgab" id = "newgab" placeholder="Enter your gab here ..."></textarea></li>
           <li><button type="submit" >submit</button></li>
           </form>
         </ul>
       </div>
-      {{/sessionExist}}
+
     </div>
   </body>
 </html>
